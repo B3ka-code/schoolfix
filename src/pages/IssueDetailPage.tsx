@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { useLive } from '../lib/useLive'
 import { toast } from '../lib/toast'
 import { formatDate } from '../lib/format'
 import {
-  CATEGORY_LABEL, ROLE_LABEL, STATUS_STYLE, isTriage,
+  CATEGORY_LABEL, ROLE_LABEL, STATUS_STYLE, isAdmin, isTriage,
   type Issue, type IssueComment, type IssueStatus,
 } from '../lib/types'
 import { StatusBadge } from '../components/StatusBadge'
@@ -16,8 +16,11 @@ const STATUSES: IssueStatus[] = ['new', 'in_progress', 'resolved', 'rejected']
 export default function IssueDetailPage() {
   const { id = '' } = useParams()
   const { profile } = useAuth()
+  const nav = useNavigate()
   const triage = isTriage(profile?.role)
+  const admin = isAdmin(profile?.role)
   const [issue, setIssue] = useState<Issue | null>(null)
+  const [deleting, setDeleting] = useState(false)
   const [state, setState] = useState<'loading' | 'ready' | 'missing' | 'failed'>('loading')
   const [comments, setComments] = useState<IssueComment[]>([])
   const [photo, setPhoto] = useState<string | null>(null)
@@ -53,6 +56,18 @@ export default function IssueDetailPage() {
     if (!issue || s === issue.status) return
     const r = await api.setIssueStatus(issue.id, s)
     if (r.ok) { setIssue(r.data); toast.success(`Статус: ${STATUS_STYLE[s].label}`) }
+  }
+
+  async function removeIssue() {
+    if (!issue) return
+    if (!window.confirm(`Удалить заявку «${issue.title}» насовсем? Это действие нельзя отменить.`)) return
+    setDeleting(true)
+    try {
+      const r = await api.deleteIssue(issue.id)
+      if (r.ok) { toast.success('Заявка удалена'); nav('/') }
+    } finally {
+      setDeleting(false)
+    }
   }
 
   async function sendComment(e: FormEvent) {
@@ -146,6 +161,14 @@ export default function IssueDetailPage() {
           <div><p className="text-mute">Категория</p><p>{CATEGORY_LABEL[issue.category]}</p></div>
           {issue.location && <div><p className="text-mute">Где</p><p>{issue.location}</p></div>}
           <div><p className="text-mute">Обновлена</p><p>{formatDate(issue.updated_at)}</p></div>
+          {admin && (
+            <div className="border-t border-line pt-4">
+              <button className="btn btn-danger w-full" disabled={deleting} onClick={() => void removeIssue()}>
+                {deleting ? 'Удаляем…' : 'Удалить заявку'}
+              </button>
+              <p className="mt-1.5 text-xs text-mute">Например, если заявка нарушает правила. Отменить нельзя.</p>
+            </div>
+          )}
         </aside>
       </div>
     </div>
