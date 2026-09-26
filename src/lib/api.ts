@@ -48,6 +48,9 @@ export const api = {
   setIssueStatus: (id: string, status: IssueStatus) =>
     run<Issue>('Не удалось изменить статус', () =>
       supabase.from('issues').update({ status }).eq('id', id).select().single()),
+  deleteIssue: (id: string) =>
+    // RLS всё равно пускает только admin/super_admin — проверка на фронте только для UX
+    run<null>('Не удалось удалить заявку', () => supabase.from('issues').delete().eq('id', id)),
   createIssue: (input: NewIssue, uid: string, file: File | null) =>
     run<Issue>('Не удалось отправить заявку', async () => {
       let photo_path: string | null = null
