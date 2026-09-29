@@ -19,9 +19,9 @@ export default defineConfig({
         background_color: '#0E1116',
         theme_color: '#0E1116',
         icons: [
-          { src: 'https://schoolfix-ha-iz-s-projects.vercel.app/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'https://schoolfix-ha-iz-s-projects.vercel.app/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'https://schoolfix-ha-iz-s-projects.vercel.app/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'https://schoolfix-app.vercel.app/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'https://schoolfix-app.vercel.app/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'https://schoolfix-app.vercel.app/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
