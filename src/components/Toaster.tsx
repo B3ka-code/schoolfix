@@ -13,7 +13,7 @@ export function Toaster() {
       {toasts.map((t) => (
         <div key={t.id} className={`pointer-events-auto flex max-w-md items-start gap-3 rounded-md border bg-raised px-4 py-3 text-sm shadow-lg ${TONE[t.kind]}`}>
           <span className="flex-1 text-ink">{t.text}</span>
-          <button className="text-mute hover:text-ink" onClick={() => dismissToast(t.id)} aria-label="Закрыть">×</button>
+          <button className="text-mute hover:text-ink" onClick={() => dismissToast(t.id)} aria-label="Жабу">×</button>
         </div>
       ))}
     </div>
