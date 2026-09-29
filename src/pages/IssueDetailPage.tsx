@@ -55,16 +55,16 @@ export default function IssueDetailPage() {
   async function changeStatus(s: IssueStatus) {
     if (!issue || s === issue.status) return
     const r = await api.setIssueStatus(issue.id, s)
-    if (r.ok) { setIssue(r.data); toast.success(`Статус: ${STATUS_STYLE[s].label}`) }
+    if (r.ok) { setIssue(r.data); toast.success(`Мәртебе: ${STATUS_STYLE[s].label}`) }
   }
 
   async function removeIssue() {
     if (!issue) return
-    if (!window.confirm(`Удалить заявку «${issue.title}» насовсем? Это действие нельзя отменить.`)) return
+    if (!window.confirm(`«${issue.title}» өтінімін толығымен жою керек пе? Бұл әрекетті болдырмау мүмкін емес.`)) return
     setDeleting(true)
     try {
       const r = await api.deleteIssue(issue.id)
-      if (r.ok) { toast.success('Заявка удалена'); nav('/') }
+      if (r.ok) { toast.success('Өтінім жойылды'); nav('/') }
     } finally {
       setDeleting(false)
     }
@@ -83,23 +83,23 @@ export default function IssueDetailPage() {
     }
   }
 
-  if (state === 'loading') return <p className="text-sm text-mute">Загрузка…</p>
+  if (state === 'loading') return <p className="text-sm text-mute">Жүктелуде…</p>
   if (state === 'failed') return (
     <div className="card p-6 text-sm">
-      <p>Не удалось загрузить заявку.</p>
-      <button className="btn btn-ghost mt-3" onClick={() => void loadIssue()}>Повторить</button>
+      <p>Өтінімді жүктеу мүмкін болмады.</p>
+      <button className="btn btn-ghost mt-3" onClick={() => void loadIssue()}>Қайталау</button>
     </div>
   )
   if (state === 'missing' || !issue) return (
     <div>
-      <p className="text-sm text-mute">Заявка не найдена или у вас нет к ней доступа.</p>
-      <Link to="/" className="btn btn-ghost mt-3">К списку заявок</Link>
+      <p className="text-sm text-mute">Өтінім табылмады немесе сізде оған қол жеткізу құқығы жоқ.</p>
+      <Link to="/" className="btn btn-ghost mt-3">Өтінімдер тізіміне оралу</Link>
     </div>
   )
 
   return (
     <div>
-      <Link to="/" className="text-sm text-mute hover:text-ink">← Все заявки</Link>
+      <Link to="/" className="text-sm text-mute hover:text-ink">← Барлық өтінімдер</Link>
       <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_16rem]">
         <div className="min-w-0">
           <h1 className="text-xl font-semibold">{issue.title}</h1>
@@ -108,13 +108,13 @@ export default function IssueDetailPage() {
           {issue.photo_path && (
             <div className="mt-4">
               {photo
-                ? <img src={photo} alt="Фото проблемы" className="max-h-96 rounded-lg border border-line object-contain" />
-                : <p className="text-sm text-mute">Фото загружается…</p>}
+                ? <img src={photo} alt="Ақаудың суреті" className="max-h-96 rounded-lg border border-line object-contain" />
+                : <p className="text-sm text-mute">Фото жүктелуде…</p>}
             </div>
           )}
 
-          <section className="mt-8" aria-label="Комментарии">
-            <h2 className="text-base font-semibold">Комментарии <span className="text-mute">{comments.length}</span></h2>
+          <section className="mt-8" aria-label="Пікірлер">
+            <h2 className="text-base font-semibold">Пікірлер <span className="text-mute">{comments.length}</span></h2>
             <ul className="mt-3 divide-y divide-line">
               {comments.map((c) => (
                 <li key={c.id} className="py-3">
@@ -128,19 +128,19 @@ export default function IssueDetailPage() {
                   <p className="mt-1 whitespace-pre-wrap text-sm">{c.text}</p>
                 </li>
               ))}
-              {comments.length === 0 && <li className="py-3 text-sm text-mute">Пока без комментариев.</li>}
+              {comments.length === 0 && <li className="py-3 text-sm text-mute">Әзірге пікір жоқ.</li>}
             </ul>
             <form onSubmit={sendComment} className="mt-3 space-y-2">
-              <label className="sr-only" htmlFor="comment">Новый комментарий</label>
-              <textarea id="comment" className="input min-h-20" maxLength={2000} placeholder="Написать комментарий" value={text} onChange={(e) => setText(e.target.value)} />
-              <button className="btn btn-primary" disabled={busy || !text.trim()}>Отправить</button>
+              <label className="sr-only" htmlFor="comment">Жаңа пікір</label>
+              <textarea id="comment" className="input min-h-20" maxLength={2000} placeholder="Пікір жазу" value={text} onChange={(e) => setText(e.target.value)} />
+              <button className="btn btn-primary" disabled={busy || !text.trim()}>Жіберу</button>
             </form>
           </section>
         </div>
 
         <aside className="card h-fit space-y-4 p-4 text-sm">
           <div>
-            <p className="text-mute">Статус</p>
+            <p className="text-mute">Мәртебе</p>
             {triage ? (
               <div className="mt-2 flex flex-col gap-1.5">
                 {STATUSES.map((s) => (
@@ -158,15 +158,15 @@ export default function IssueDetailPage() {
               <div className="mt-2"><StatusBadge status={issue.status} /></div>
             )}
           </div>
-          <div><p className="text-mute">Категория</p><p>{CATEGORY_LABEL[issue.category]}</p></div>
-          {issue.location && <div><p className="text-mute">Где</p><p>{issue.location}</p></div>}
-          <div><p className="text-mute">Обновлена</p><p>{formatDate(issue.updated_at)}</p></div>
+          <div><p className="text-mute">Санат</p><p>{CATEGORY_LABEL[issue.category]}</p></div>
+          {issue.location && <div><p className="text-mute">Қай жерде</p><p>{issue.location}</p></div>}
+          <div><p className="text-mute">Жаңартылды</p><p>{formatDate(issue.updated_at)}</p></div>
           {admin && (
             <div className="border-t border-line pt-4">
               <button className="btn btn-danger w-full" disabled={deleting} onClick={() => void removeIssue()}>
-                {deleting ? 'Удаляем…' : 'Удалить заявку'}
+                {deleting ? 'Жойылуда…' : 'Өтінімді жою'}
               </button>
-              <p className="mt-1.5 text-xs text-mute">Например, если заявка нарушает правила. Отменить нельзя.</p>
+              <p className="mt-1.5 text-xs text-mute">Мысалы, өтінім ережелерді бұзса. Болдырмау мүмкін емес.</p>
             </div>
           )}
         </aside>

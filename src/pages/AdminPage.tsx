@@ -22,14 +22,14 @@ export default function AdminPage() {
 
   const pending = requests.filter((r) => r.status === 'pending').length
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'requests', label: pending ? `Заявки на роли (${pending})` : 'Заявки на роли' },
-    { id: 'users', label: 'Пользователи' },
-    { id: 'codes', label: 'Инвайт-коды' },
+    { id: 'requests', label: pending ? `Рөлге өтінімдер (${pending})` : 'Рөлге өтінімдер' },
+    { id: 'users', label: 'Пайдаланушылар' },
+    { id: 'codes', label: 'Кодтар' },
   ]
 
   return (
     <div>
-      <h1 className="text-xl font-semibold">Управление</h1>
+      <h1 className="text-xl font-semibold">Басқару</h1>
       <div className="mt-4 flex gap-1 border-b border-line" role="tablist">
         {tabs.map((t) => (
           <button

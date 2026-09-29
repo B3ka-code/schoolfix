@@ -34,15 +34,15 @@ export default function IssuesPage() {
     <div>
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">{triage ? 'Все заявки' : 'Мои заявки'}</h1>
+          <h1 className="text-xl font-semibold">{triage ? 'Барлық өтінімдер' : 'Менің өтінімдерім'}</h1>
           <p className="mt-1 text-sm text-mute">
-            {triage ? 'Меняйте статус и оставляйте комментарии внутри заявки' : 'Здесь только заявки, которые подали вы'}
+            {triage ? 'Мәртебені өзгертіп, өтінім ішінде пікір қалдыра аласыз' : 'Мұнда тек сіз жіберген өтінімдер ғана бар'}
           </p>
         </div>
-        <Link to="/new" className="btn btn-primary shrink-0">Новая заявка</Link>
+        <Link to="/new" className="btn btn-primary shrink-0">Жаңа өтінім</Link>
       </header>
 
-      <div className="mt-5 flex flex-wrap gap-1.5" role="tablist" aria-label="Фильтр по статусу">
+      <div className="mt-5 flex flex-wrap gap-1.5" role="tablist" aria-label="Мәртебе бойынша сүзгі">
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -51,21 +51,21 @@ export default function IssuesPage() {
             onClick={() => setFilter(f)}
             className={`rounded-md border px-3 py-1.5 text-sm ${filter === f ? 'border-ink/40 bg-raised text-ink' : 'border-line text-mute hover:text-ink'}`}
           >
-            {f === 'all' ? 'Все' : STATUS_STYLE[f].label} <span className="ml-1 text-mute">{counts[f]}</span>
+            {f === 'all' ? 'Барлығы' : STATUS_STYLE[f].label} <span className="ml-1 text-mute">{counts[f]}</span>
           </button>
         ))}
       </div>
 
       {failed && !issues && (
         <div className="card mt-4 p-6 text-sm">
-          <p>Не удалось загрузить заявки.</p>
-          <button className="btn btn-ghost mt-3" onClick={() => void load()}>Повторить</button>
+          <p>Өтінімдерді жүктеу мүмкін болмады.</p>
+          <button className="btn btn-ghost mt-3" onClick={() => void load()}>Қайталау</button>
         </div>
       )}
-      {!failed && !issues && <p className="mt-6 text-sm text-mute">Загрузка…</p>}
+      {!failed && !issues && <p className="mt-6 text-sm text-mute">Жүктелуде…</p>}
       {issues && list.length === 0 && (
         <div className="card mt-4 p-6 text-sm text-mute">
-          {issues.length === 0 ? 'Заявок пока нет. Что-то сломалось — создайте первую.' : 'В этом статусе заявок нет.'}
+          {issues.length === 0 ? 'Әзірге өтінім жоқ. Бірдеңе бұзылды ма — біріншісін жасаңыз.' : 'Бұл мәртебеде өтінім жоқ.'}
         </div>
       )}
 

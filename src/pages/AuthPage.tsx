@@ -26,7 +26,7 @@ export default function AuthPage() {
   return (
     <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-5">
       <h1 className="text-2xl font-semibold tracking-tight">SchoolFix</h1>
-      <p className="mt-1 text-sm text-mute">Заявки на ремонт и проблемы в школе</p>
+      <p className="mt-1 text-sm text-mute">Мектептегі жөндеу және ақаулар туралы өтінімдер</p>
 
       <div className="mt-8 grid grid-cols-2 gap-1 rounded-md border border-line bg-panel p-1" role="tablist">
         {(['in', 'up'] as const).map((m) => (
@@ -37,7 +37,7 @@ export default function AuthPage() {
             onClick={() => setMode(m)}
             className={`rounded px-3 py-1.5 text-sm ${mode === m ? 'bg-raised text-ink' : 'text-mute hover:text-ink'}`}
           >
-            {m === 'in' ? 'Вход' : 'Регистрация'}
+            {m === 'in' ? 'Кіру' : 'Тіркелу'}
           </button>
         ))}
       </div>
@@ -45,24 +45,24 @@ export default function AuthPage() {
       <form onSubmit={submit} className="mt-5 space-y-4">
         {mode === 'up' && (
           <div>
-            <label className="label" htmlFor="name">Имя и фамилия</label>
+            <label className="label" htmlFor="name">Аты-жөні</label>
             <input id="name" className="input" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
           </div>
         )}
         <div>
-          <label className="label" htmlFor="email">Почта</label>
+          <label className="label" htmlFor="email">Пошта</label>
           <input id="email" type="email" className="input" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
         </div>
         <div>
-          <label className="label" htmlFor="password">Пароль</label>
+          <label className="label" htmlFor="password">Құпия сөз</label>
           <input id="password" type="password" className="input" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === 'in' ? 'current-password' : 'new-password'} />
         </div>
-        <button className="btn btn-primary w-full" disabled={busy}>{mode === 'in' ? 'Войти' : 'Создать аккаунт'}</button>
+        <button className="btn btn-primary w-full" disabled={busy}>{mode === 'in' ? 'Кіру' : 'Аккаунт жасау'}</button>
       </form>
 
       {mode === 'up' && (
         <p className="mt-4 text-sm text-mute">
-          Все начинают как ученики. Учителя и техперсонал вводят инвайт-код от администратора в разделе «Профиль».
+          Барлығы оқушы ретінде бастайды. Мұғалімдер мен техникалық қызметкерлер әкімшіден алған кодты «Профиль» бөлімінде енгізеді.
         </p>
       )}
     </div>

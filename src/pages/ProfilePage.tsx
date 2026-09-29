@@ -7,9 +7,9 @@ import { formatDate } from '../lib/format'
 import { ROLE_LABEL, type RequestStatus, type RoleRequest } from '../lib/types'
 
 const REQ_LABEL: Record<RequestStatus, { text: string; cls: string }> = {
-  pending: { text: 'Ждёт подтверждения', cls: 'text-st-progress' },
-  approved: { text: 'Подтверждена', cls: 'text-st-resolved' },
-  rejected: { text: 'Отклонена', cls: 'text-st-rejected' },
+  pending: { text: 'Растауды күтуде', cls: 'text-st-progress' },
+  approved: { text: 'Расталды', cls: 'text-st-resolved' },
+  rejected: { text: 'Қабылданбады', cls: 'text-st-rejected' },
 }
 
 export default function ProfilePage() {
@@ -35,7 +35,7 @@ export default function ProfilePage() {
       const r = await api.redeemCode(code)
       if (r.ok) {
         setCode('')
-        toast.success('Код принят. Администратор подтвердит роль вручную')
+        toast.success('Код қабылданды. Әкімші рөлді қолмен растайды')
         await load()
       }
     } finally {
@@ -47,27 +47,27 @@ export default function ProfilePage() {
     <div className="max-w-xl">
       <h1 className="text-xl font-semibold">Профиль</h1>
       <div className="card mt-5 divide-y divide-line text-sm">
-        <div className="flex justify-between p-4"><span className="text-mute">Имя</span><span>{profile.full_name}</span></div>
-        <div className="flex justify-between p-4"><span className="text-mute">Почта</span><span>{profile.email}</span></div>
-        <div className="flex justify-between p-4"><span className="text-mute">Роль</span><span>{ROLE_LABEL[profile.role]}</span></div>
+        <div className="flex justify-between p-4"><span className="text-mute">Аты-жөні</span><span>{profile.full_name}</span></div>
+        <div className="flex justify-between p-4"><span className="text-mute">Пошта</span><span>{profile.email}</span></div>
+        <div className="flex justify-between p-4"><span className="text-mute">Рөлі</span><span>{ROLE_LABEL[profile.role]}</span></div>
       </div>
 
       {profile.role === 'student' && (
         <section className="mt-8">
-          <h2 className="text-base font-semibold">Вы учитель или сотрудник?</h2>
-          <p className="mt-1 text-sm text-mute">Введите инвайт-код от администратора. Роль появится после его подтверждения.</p>
+          <h2 className="text-base font-semibold">Сіз мұғалімсіз бе немесе қызметкерсіз бе?</h2>
+          <p className="mt-1 text-sm text-mute">Әкімшіден алған кодты енгізіңіз. Рөл ол растағаннан кейін пайда болады.</p>
           <form onSubmit={redeem} className="mt-3 flex gap-2">
-            <label className="sr-only" htmlFor="code">Инвайт-код</label>
+            <label className="sr-only" htmlFor="code">Код</label>
             <input id="code" className="input" placeholder="XXXX-XXXX-XXXX-XXXX" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} disabled={hasPending} />
-            <button className="btn btn-primary shrink-0" disabled={busy || hasPending || !code.trim()}>Отправить</button>
+            <button className="btn btn-primary shrink-0" disabled={busy || hasPending || !code.trim()}>Жіберу</button>
           </form>
-          {hasPending && <p className="mt-2 text-sm text-mute">Предыдущая заявка ещё на рассмотрении.</p>}
+          {hasPending && <p className="mt-2 text-sm text-mute">Алдыңғы өтінім әлі қаралуда.</p>}
         </section>
       )}
 
       {requests.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-base font-semibold">Ваши заявки на роль</h2>
+          <h2 className="text-base font-semibold">Рөлге сіздің өтінімдеріңіз</h2>
           <ul className="card mt-3 divide-y divide-line text-sm">
             {requests.map((r) => (
               <li key={r.id} className="flex items-center justify-between p-4">
