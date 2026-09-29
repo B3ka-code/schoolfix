@@ -30,28 +30,28 @@ export default function UsersTable() {
 
   async function changeRole(u: Profile, role: Role) {
     if (role === u.role) return
-    if (!window.confirm(`Сменить роль «${u.full_name}» на «${ROLE_LABEL[role]}»?`)) return
+    if (!window.confirm(`«${u.full_name}» пайдаланушысының рөлін «${ROLE_LABEL[role]}» етіп өзгерту керек пе?`)) return
     const r = await api.setUserRole(u.id, role)
-    if (r.ok) toast.success('Роль изменена')
+    if (r.ok) toast.success('Рөл өзгертілді')
     await load()
   }
 
   async function toggleActive(u: Profile) {
-    if (u.is_active && !window.confirm(`Отключить «${u.full_name}»? Он потеряет доступ к приложению.`)) return
+    if (u.is_active && !window.confirm(`«${u.full_name}» өшірілсін бе? Ол қолданбаға қол жеткізе алмай қалады.`)) return
     const r = await api.setUserActive(u.id, !u.is_active)
-    if (r.ok) toast.success(u.is_active ? 'Аккаунт отключён' : 'Аккаунт включён')
+    if (r.ok) toast.success(u.is_active ? 'Аккаунт өшірілді' : 'Аккаунт қосылды')
     await load()
   }
 
   return (
     <div>
-      <label className="sr-only" htmlFor="q">Поиск пользователей</label>
-      <input id="q" className="input max-w-xs" placeholder="Поиск по имени или почте" value={q} onChange={(e) => setQ(e.target.value)} />
-      {!users && <p className="mt-4 text-sm text-mute">Загрузка…</p>}
+      <label className="sr-only" htmlFor="q">Пайдаланушыны іздеу</label>
+      <input id="q" className="input max-w-xs" placeholder="Аты-жөні немесе пошта бойынша іздеу" value={q} onChange={(e) => setQ(e.target.value)} />
+      {!users && <p className="mt-4 text-sm text-mute">Жүктелуде…</p>}
       <div className="card mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-line text-mute">
-            <tr><th className="p-3 font-normal">Пользователь</th><th className="p-3 font-normal">Роль</th><th className="p-3 font-normal">Доступ</th></tr>
+            <tr><th className="p-3 font-normal">Пайдаланушы</th><th className="p-3 font-normal">Рөлі</th><th className="p-3 font-normal">Қолжетімділік</th></tr>
           </thead>
           <tbody className="divide-y divide-line">
             {shown.map((u) => (
@@ -59,21 +59,21 @@ export default function UsersTable() {
                 <td className="p-3"><p className="font-medium">{u.full_name}</p><p className="text-xs text-mute">{u.email}</p></td>
                 <td className="p-3">
                   {locked(u) ? ROLE_LABEL[u.role] : (
-                    <select aria-label={`Роль: ${u.full_name}`} className="input w-auto py-1" value={u.role} onChange={(e) => void changeRole(u, e.target.value as Role)}>
+                    <select aria-label={`Рөлі: ${u.full_name}`} className="input w-auto py-1" value={u.role} onChange={(e) => void changeRole(u, e.target.value as Role)}>
                       {assignable.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
                     </select>
                   )}
                 </td>
                 <td className="p-3">
-                  {locked(u) ? (u.is_active ? 'Активен' : 'Отключён') : (
+                  {locked(u) ? (u.is_active ? 'Белсенді' : 'Өшірілген') : (
                     <button className={`btn ${u.is_active ? 'btn-danger' : 'btn-ghost'} py-1`} onClick={() => void toggleActive(u)}>
-                      {u.is_active ? 'Отключить' : 'Включить'}
+                      {u.is_active ? 'Өшіру' : 'Қосу'}
                     </button>
                   )}
                 </td>
               </tr>
             ))}
-            {users && shown.length === 0 && <tr><td className="p-3 text-mute" colSpan={3}>Никого не нашли.</td></tr>}
+            {users && shown.length === 0 && <tr><td className="p-3 text-mute" colSpan={3}>Ешкім табылмады.</td></tr>}
           </tbody>
         </table>
       </div>
