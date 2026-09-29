@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let alive = true
     supabase.auth.getSession()
       .then(({ data }) => { if (alive) setSession(data.session) })
-      .catch((e) => toast.error(`Не удалось восстановить сессию. ${humanizeError(e)}`))
+      .catch((e) => toast.error(`Сеансты қалпына келтіру мүмкін болмады. ${humanizeError(e)}`))
       .finally(() => { if (alive) setBooting(false) })
     // в колбэке только setState: await supabase.* внутри него может подвесить клиент
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => setSession(s))
@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName } } })
         if (error) throw error
-        if (!data.session) toast.info('Мы отправили письмо — подтвердите почту, потом войдите')
+        if (!data.session) toast.info('Хат жібердік — поштаны растап, содан кейін кіріңіз')
         return true
       } catch (e) {
         toast.error(humanizeError(e))
@@ -91,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signOut()
         if (error) throw error
       } catch (e) {
-        toast.error(`Не удалось выйти. ${humanizeError(e)}`)
+        toast.error(`Шығу мүмкін болмады. ${humanizeError(e)}`)
       }
     },
   }), [session, profile, booting, uid, profileFailed, refresh])

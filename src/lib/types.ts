@@ -69,25 +69,25 @@ export const isTriage = (r?: Role | null) => r === 'staff' || r === 'admin' || r
 export const isAdmin = (r?: Role | null) => r === 'admin' || r === 'super_admin'
 
 export const ROLE_LABEL: Record<Role, string> = {
-  student: 'Ученик',
-  teacher: 'Учитель',
-  staff: 'Техперсонал',
-  admin: 'Администратор',
-  super_admin: 'Суперадмин',
+  student: 'Оқушы',
+  teacher: 'Мұғалім',
+  staff: 'Техникалық қызметкер',
+  admin: 'Әкімші',
+  super_admin: 'Бас әкімші',
 }
 
 export const CATEGORY_LABEL: Record<IssueCategory, string> = {
   equipment: 'Техника',
   plumbing: 'Сантехника',
-  electrical: 'Электрика',
-  furniture: 'Мебель',
-  other: 'Другое',
+  electrical: 'Электр жүйесі',
+  furniture: 'Жиһаз',
+  other: 'Басқа',
 }
 
 // Классы записаны целиком, иначе Tailwind вырежет их при сборке.
 export const STATUS_STYLE: Record<IssueStatus, { label: string; text: string; bg: string; edge: string }> = {
-  new: { label: 'Новая', text: 'text-st-new', bg: 'bg-st-new/10', edge: 'border-l-st-new' },
-  in_progress: { label: 'В работе', text: 'text-st-progress', bg: 'bg-st-progress/10', edge: 'border-l-st-progress' },
-  resolved: { label: 'Решена', text: 'text-st-resolved', bg: 'bg-st-resolved/10', edge: 'border-l-st-resolved' },
-  rejected: { label: 'Отклонена', text: 'text-st-rejected', bg: 'bg-st-rejected/10', edge: 'border-l-st-rejected' },
+  new: { label: 'Жаңа', text: 'text-st-new', bg: 'bg-st-new/10', edge: 'border-l-st-new' },
+  in_progress: { label: 'Жұмыста', text: 'text-st-progress', bg: 'bg-st-progress/10', edge: 'border-l-st-progress' },
+  resolved: { label: 'Шешілді', text: 'text-st-resolved', bg: 'bg-st-resolved/10', edge: 'border-l-st-resolved' },
+  rejected: { label: 'Қабылданбады', text: 'text-st-rejected', bg: 'bg-st-rejected/10', edge: 'border-l-st-rejected' },
 }

@@ -30,29 +30,29 @@ const MAX_PHOTO = 5 * 1024 * 1024
 export const api = {
   // ---- профиль / пользователи
   getMyProfile: (uid: string) =>
-    run<Profile>('Не удалось загрузить профиль', () => supabase.from('profiles').select('*').eq('id', uid).single()),
+    run<Profile>('Профильді жүктеу мүмкін болмады', () => supabase.from('profiles').select('*').eq('id', uid).single()),
   listUsers: () =>
-    run<Profile[]>('Не удалось загрузить пользователей', () =>
+    run<Profile[]>('Пайдаланушыларды жүктеу мүмкін болмады', () =>
       supabase.from('profiles').select('*').order('created_at', { ascending: false })),
   setUserRole: (id: string, role: Role) =>
-    run<Profile>('Не удалось сменить роль', () => supabase.rpc('admin_set_user_role', { p_user_id: id, p_role: role }).single()),
+    run<Profile>('Рөлді ауыстыру мүмкін болмады', () => supabase.rpc('admin_set_user_role', { p_user_id: id, p_role: role }).single()),
   setUserActive: (id: string, active: boolean) =>
-    run<Profile>('Не удалось изменить доступ', () => supabase.rpc('admin_set_user_active', { p_user_id: id, p_active: active }).single()),
+    run<Profile>('Қолжетімділікті өзгерту мүмкін болмады', () => supabase.rpc('admin_set_user_active', { p_user_id: id, p_active: active }).single()),
 
   // ---- заявки (issues)
   listIssues: () =>
-    run<Issue[]>('Не удалось загрузить заявки', () =>
+    run<Issue[]>('Өтінімдерді жүктеу мүмкін болмады', () =>
       supabase.from('issues').select('*').order('created_at', { ascending: false })),
   getIssue: (id: string) =>
-    run<Issue | null>('Не удалось загрузить заявку', () => supabase.from('issues').select('*').eq('id', id).maybeSingle()),
+    run<Issue | null>('Өтінімді жүктеу мүмкін болмады', () => supabase.from('issues').select('*').eq('id', id).maybeSingle()),
   setIssueStatus: (id: string, status: IssueStatus) =>
-    run<Issue>('Не удалось изменить статус', () =>
+    run<Issue>('Мәртебені өзгерту мүмкін болмады', () =>
       supabase.from('issues').update({ status }).eq('id', id).select().single()),
   deleteIssue: (id: string) =>
     // RLS всё равно пускает только admin/super_admin — проверка на фронте только для UX
-    run<null>('Не удалось удалить заявку', () => supabase.from('issues').delete().eq('id', id)),
+    run<null>('Өтінімді жою мүмкін болмады', () => supabase.from('issues').delete().eq('id', id)),
   createIssue: (input: NewIssue, uid: string, file: File | null) =>
-    run<Issue>('Не удалось отправить заявку', async () => {
+    run<Issue>('Өтінімді жіберу мүмкін болмады', async () => {
       let photo_path: string | null = null
       if (file) {
         if (!ALLOWED_PHOTOS.includes(file.type)) throw new Error('Фото должно быть в формате JPG, PNG или WebP')
@@ -67,39 +67,39 @@ export const api = {
       return res
     }),
   photoUrl: (path: string) =>
-    run<{ signedUrl: string }>('Не удалось загрузить фото', () =>
+    run<{ signedUrl: string }>('Фотоны жүктеу мүмкін болмады', () =>
       supabase.storage.from(PHOTO_BUCKET).createSignedUrl(path, 3600)),
 
   // ---- комментарии
   listComments: (issueId: string) =>
-    run<IssueComment[]>('Не удалось загрузить комментарии', () =>
+    run<IssueComment[]>('Пікірлерді жүктеу мүмкін болмады', () =>
       supabase.from('issue_comments').select('*').eq('issue_id', issueId).order('created_at', { ascending: true })),
   addComment: (issueId: string, text: string) =>
-    run<IssueComment>('Не удалось отправить комментарий', () =>
+    run<IssueComment>('Пікірді жіберу мүмкін болмады', () =>
       supabase.from('issue_comments').insert({ issue_id: issueId, text }).select().single()),
 
   // ---- роли и коды
   redeemCode: (code: string) =>
-    run<RoleRequest>('Не удалось применить код', () => supabase.rpc('redeem_invite_code', { p_code: code }).single()),
+    run<RoleRequest>('Кодты қолдану мүмкін болмады', () => supabase.rpc('redeem_invite_code', { p_code: code }).single()),
   myRoleRequests: () =>
-    run<RoleRequest[]>('Не удалось загрузить ваши заявки на роль', () =>
+    run<RoleRequest[]>('Рөлге сіздің өтінімдеріңізді жүктеу мүмкін болмады', () =>
       supabase.from('role_requests').select('id,user_id,requested_role,status,created_at,reviewed_at').order('created_at', { ascending: false })),
   listRoleRequests: () =>
-    run<RoleRequest[]>('Не удалось загрузить заявки на роли', () =>
+    run<RoleRequest[]>('Рөлге өтінімдерді жүктеу мүмкін болмады', () =>
       supabase.from('role_requests')
         .select('id,user_id,requested_role,status,created_at,reviewed_at,profiles!role_requests_user_id_fkey(full_name,email)')
         .order('created_at', { ascending: false }).limit(100)
         .returns<RoleRequest[]>()), // embed many-to-one: рантайм отдаёт объект, а не массив
   reviewRequest: (id: string, approve: boolean) =>
-    run<RoleRequest>('Не удалось обработать заявку', () =>
+    run<RoleRequest>('Өтінімді өңдеу мүмкін болмады', () =>
       supabase.rpc('admin_review_role_request', { p_request_id: id, p_approve: approve }).single()),
   listCodes: () =>
     // колонки перечислены явно: на code_hash у клиента нет права SELECT
-    run<InviteCode[]>('Не удалось загрузить коды', () =>
+    run<InviteCode[]>('Кодтарды жүктеу мүмкін болмады', () =>
       supabase.from('invite_codes').select('id,role,max_uses,used_count,expires_at,is_active,note,created_at').order('created_at', { ascending: false })),
   createCode: (role: Role, maxUses: number, days: number, note: string) =>
-    run<string>('Не удалось создать код', () =>
+    run<string>('Код жасау мүмкін болмады', () =>
       supabase.rpc('create_invite_code', { p_role: role, p_max_uses: maxUses, p_expires_in_days: days, p_note: note || null })),
   setCodeActive: (id: string, active: boolean) =>
-    run<null>('Не удалось изменить код', () => supabase.rpc('admin_set_invite_active', { p_code_id: id, p_active: active })),
+    run<null>('Кодты өзгерту мүмкін болмады', () => supabase.rpc('admin_set_invite_active', { p_code_id: id, p_active: active })),
 }
